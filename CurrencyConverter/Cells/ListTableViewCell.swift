@@ -29,7 +29,6 @@ class ListTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         setConstraints()
         
         self.selectionStyle = .none
@@ -47,7 +46,7 @@ class ListTableViewCell: UITableViewCell {
             backgroundViewCell.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
             backgroundViewCell.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             backgroundViewCell.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            backgroundViewCell.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1)
+            backgroundViewCell.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0)
         ])
         
         self.addSubview(nameCellLabel)

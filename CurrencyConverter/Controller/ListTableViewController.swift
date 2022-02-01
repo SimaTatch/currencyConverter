@@ -19,6 +19,7 @@ class ListTableViewController: UIViewController {
     var filteredArray = [Section]()
     private let idCell = "cellList"
     private let idHeader = "cellListHeader"
+    let apiMan: ApiManagerProtocol = APIManager()
     
     //      MARK: - CreateSearchController
     private let mySearchController = UISearchController(searchResultsController: nil)
@@ -86,7 +87,7 @@ class ListTableViewController: UIViewController {
         
         //        MARK: - FetchJSON
         DispatchQueue.main.async {
-            APIManager.fetchJson(key: "USD") { results in
+            self.apiMan.fetchJson(key: "USD") { results in
                 self.currencyKey.append(contentsOf: results.rates.keys)
                 self.currencyKeyAndValue = results.rates.map { key, value in
                     CurrencyModel.init(key: key, rate: value )

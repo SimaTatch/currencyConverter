@@ -10,6 +10,7 @@ class MainCurrencyView: UIView, TableViewCellDelegate, ListTableViewControllerDe
     var selectedCurrencies: [TableViewCellModel] = []
     
     private let idCalendarCell = "cell"
+    let apiMan: ApiManagerProtocol = APIManager()
 
     weak var delegate: MainCurrencyViewDelegate? //ViewController
 
@@ -77,7 +78,7 @@ class MainCurrencyView: UIView, TableViewCellDelegate, ListTableViewControllerDe
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         addGestureRecognizer(tap)
         
-        APIManager.fetchJson (key: "USD"){ result in
+        apiMan.fetchJson (key: "USD"){ result in
 
             self.currencies = result.rates.map { key, value in
                 CurrencyModel.init(key: key, rate: value )
@@ -129,6 +130,7 @@ extension MainCurrencyView: UITableViewDataSource {
         cell.currencyTextField.accessibilityIdentifier = item.key
         cell.currencyTextField.text = String(item.rate)
         cell.currencyTextField.backgroundColor = #colorLiteral(red: 0.9847063422, green: 0.9758779407, blue: 0.9938308597, alpha: 1)
+        cell.currencyTextField.textColor = UIColor(red: 0.342, green: 0.342, blue: 0.342, alpha: 1)
         model.delegate = cell
         cell.delegate = self
        

@@ -2,10 +2,14 @@
 
 import Foundation
 
-struct APIManager {
+protocol ApiManagerProtocol {
+    func fetchJson(key: String, completion: @escaping (ExchangeRates) -> ())
+}
+
+struct APIManager: ApiManagerProtocol {
     
-   
-     static func fetchJson(key: String = "USD", completion: @escaping (ExchangeRates) -> ()) {
+
+      func fetchJson(key: String = "USD", completion: @escaping (ExchangeRates) -> ()) {
         guard let url = URL(string: "https://open.er-api.com/v6/latest/\(String(describing: key))") else {return}
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if error != nil {
@@ -19,7 +23,6 @@ struct APIManager {
             } catch {
                 print(error)
             }
-
         }.resume()
     }
 }
