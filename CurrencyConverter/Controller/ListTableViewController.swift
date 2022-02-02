@@ -2,8 +2,24 @@
 
 import UIKit
 
-protocol ListTableViewControllerDelegate: AnyObject {
-    func appendSelectedCell(cell: TableViewCellModel)
+//    MARK: - CellRound
+enum CellRound {
+    case top
+    case bottom
+    case none
+    
+    var corners: CACornerMask {
+        switch self {
+            
+        case .top:
+            return [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        case .bottom:
+            return [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+
+        case .none:
+            return []
+        }
+    }
 }
 
 class ListTableViewController: UIViewController {
@@ -21,7 +37,7 @@ class ListTableViewController: UIViewController {
     private let idHeader = "cellListHeader"
     let apiMan: ApiManagerProtocol = APIManager()
     
-    //      MARK: - CreateSearchController
+    //    MARK: - CreateSearchController
     private let mySearchController = UISearchController(searchResultsController: nil)
     private var searchBarIsEmpty: Bool {
         guard let text = mySearchController.searchBar.text else {return false}
@@ -30,7 +46,9 @@ class ListTableViewController: UIViewController {
     private var isFiltering: Bool {
         return mySearchController.isActive && !searchBarIsEmpty
     }
-    
+    var currentSection: [Section] {
+         isFiltering ? filteredArray : sections
+    }
     
     //    MARK: - NavigationBar
     func setNavigationBar() {
@@ -109,7 +127,7 @@ class ListTableViewController: UIViewController {
 }
 
 
-//MARK: - UITableViewDelegate, UITableViewDataSource
+//  MARK: - UITableViewDelegate, UITableViewDataSource
 extension ListTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -137,7 +155,15 @@ extension ListTableViewController: UITableViewDelegate, UITableViewDataSource {
                 section = sections[indexPath.section]
             }
 
+//            cell.layer.backgroundColor = UIColor.white.cgColor  // it also works to make sections rounded
             let username = section.currencyName[indexPath.row]
+            if indexPath.row == 0 {
+                cell.maskedCorners = .top
+            } else if indexPath.row == currentSection[indexPath.section].currencyName.count - 1 {
+                cell.maskedCorners = .bottom
+            } else {
+                cell.maskedCorners = CellRound.none
+            }
             cell.nameCellLabel.text = username
             return cell
         }

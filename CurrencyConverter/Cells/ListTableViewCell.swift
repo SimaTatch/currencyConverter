@@ -26,6 +26,11 @@ class ListTableViewCell: UITableViewCell {
         return label
     }()
     
+    var maskedCorners: CellRound? {
+        didSet {
+            applyMask()
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -39,13 +44,24 @@ class ListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    func applyMask() {
+        guard let corners = self.maskedCorners?.corners else {
+            self.backgroundViewCell.layer.cornerRadius = 0
+            return
+            
+        }
+        self.backgroundViewCell.layer.cornerRadius = 10
+        self.backgroundViewCell.layer.maskedCorners = corners
+    }
+    
     func setConstraints() {
         
         self.addSubview(backgroundViewCell)
         NSLayoutConstraint.activate([
             backgroundViewCell.topAnchor.constraint(equalTo: self.topAnchor, constant: 0),
-            backgroundViewCell.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            backgroundViewCell.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
+            backgroundViewCell.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            backgroundViewCell.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
             backgroundViewCell.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0)
         ])
         
@@ -56,4 +72,13 @@ class ListTableViewCell: UITableViewCell {
         ])
     }
     
+    override func prepareForReuse() {
+        maskedCorners = nil
+        super.prepareForReuse()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyMask()
+    }
 }
